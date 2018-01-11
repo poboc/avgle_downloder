@@ -12,7 +12,15 @@ def download_ts_file(url,store_dir):
     ts_name = url.split('/')[-1]
     ts_dir = os.path.join(store_dir,ts_name)
     index = int(ts_name.split('-')[1])
-    ts_res = requests.get(url)
+    try:
+        ts_res = requests.get(url)
+    except:
+        time.sleep(3)
+        try:
+            ts_res = requests.get(url)
+        except:
+            print("第",index,"個串流檔下載失敗ＱＱＱＱＱＱＱＱＱＱＱＱ")
+            return
     f = open(ts_dir,'wb')
     f.write(ts_res.content)
     f.close
@@ -20,7 +28,6 @@ def download_ts_file(url,store_dir):
 
 if __name__ == '__main__':
     video_url = input("enter video url: ")
-    input_dir = input("enter which folder you want to save video: ")
     startTime = datetime.now()
     print("開始時間: ",startTime)
     page_res = requests.get(video_url)
@@ -38,7 +45,7 @@ if __name__ == '__main__':
     m3u8_str = m3u8_res.text
     m3u8 = m3u8_str.split('\n')
     count = 0
-    DIR = os.path.join(input_dir,video_name)
+    DIR = os.path.join('/Users/hankchen/documents/未命名/avgle',video_name)
     ts_foler = DIR
     if not os.path.isdir(DIR):
         os.makedirs(DIR)
